@@ -10,7 +10,7 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['logo.png', 'banner.jpg', 'models/*', 'tfjs-wasm/*'],
+      includeAssets: ['logo.png', 'mark.png', 'inicio.jpg', 'banner.jpg', 'models/*', 'tfjs-wasm/*'],
       manifest: {
         name: 'Margybel Pacheco Mitchell',
         short_name: 'Margybel',

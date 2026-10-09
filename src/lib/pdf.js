@@ -1,7 +1,7 @@
 import { jsPDF } from 'jspdf'
 import { autoTable } from 'jspdf-autotable'
 
-const YELLOW = [183, 255, 0]
+const YELLOW = [255, 0, 184]
 const BLACK = [10, 10, 10]
 const clean = (s) => s.replace(/\*\*|__|`|_/g, '').replace(/[^\x20-\x7EáéíóúÁÉÍÓÚñÑüÜ¿¡°·–—…•%$€\n]/g, '').trim()
 

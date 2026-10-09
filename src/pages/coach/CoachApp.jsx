@@ -359,7 +359,7 @@ function CoachAnalytics({ d }) {
         <Stat label="Calorías totales" value={Math.round(k.kcal).toLocaleString()} icon={Flame} />
       </div>
       <div className="card mt"><h3>Sesiones diarias</h3>
-        <ResponsiveContainer width="100%" height={220}><BarChart data={k.days}><CartesianGrid stroke="#222" vertical={false} /><XAxis dataKey="dia" stroke="#666" fontSize={10} /><YAxis stroke="#666" fontSize={11} allowDecimals={false} /><Tooltip {...tip} /><Bar dataKey="sesiones" fill="#B7FF00" radius={[5, 5, 0, 0]} /></BarChart></ResponsiveContainer>
+        <ResponsiveContainer width="100%" height={220}><BarChart data={k.days}><CartesianGrid stroke="#222" vertical={false} /><XAxis dataKey="dia" stroke="#666" fontSize={10} /><YAxis stroke="#666" fontSize={11} allowDecimals={false} /><Tooltip {...tip} /><Bar dataKey="sesiones" fill="#FF00B8" radius={[5, 5, 0, 0]} /></BarChart></ResponsiveContainer>
       </div>
       <div className="grid g2 mt">
         <div className="card"><h3><Trophy size={16} className="y" /> Ranking de constancia</h3>

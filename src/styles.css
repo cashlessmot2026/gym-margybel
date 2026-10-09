@@ -1,7 +1,7 @@
 :root {
-  --y: #B7FF00;
-  --y2: #9ADB00;
-  --y-soft: rgba(183,255,0, .12);
+  --y: #FF00B8;
+  --y2: #CC0094;
+  --y-soft: rgba(255,0,184, .12);
   --bg: #070707;
   --bg2: #0f0f0f;
   --card: #141414;
@@ -145,7 +145,7 @@ table.t { width: 100%; border-collapse: collapse; font-size: .88rem; }
 
 /* ---------- Login ---------- */
 .login-wrap { min-height: 100vh; display: grid; grid-template-columns: 1.1fr 1fr; }
-.login-hero { background: radial-gradient(circle at 20% 20%, rgba(183,255,0,.25), transparent 50%), linear-gradient(135deg, #111 0%, #000 100%);
+.login-hero { background: radial-gradient(circle at 20% 20%, rgba(255,0,184,.25), transparent 50%), linear-gradient(135deg, #111 0%, #000 100%);
   padding: 50px; display: flex; flex-direction: column; justify-content: space-between; border-right: 1px solid var(--line); position: relative; overflow: hidden; }
 .login-hero h1 { font-family: var(--display); font-size: clamp(3rem, 7vw, 6rem); line-height: .9; margin: 0; }
 .login-hero h1 span { color: var(--y); }
@@ -203,13 +203,13 @@ table.t { width: 100%; border-collapse: collapse; font-size: .88rem; }
 .cam { position: relative; background: #000; border-radius: 20px; overflow: hidden; aspect-ratio: 4/3; border: 2px solid var(--line); }
 .cam video, .cam canvas { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
 .cam .hint { position: absolute; left: 50%; bottom: 14px; transform: translateX(-50%); background: rgba(0,0,0,.75); padding: 8px 16px; border-radius: 99px; font-weight: 600; font-size: .9rem; white-space: nowrap; }
-.cam .oval { position: absolute; left: 50%; top: 50%; width: 46%; height: 72%; transform: translate(-50%, -50%); border: 3px dashed rgba(183,255,0, .7); border-radius: 50%; }
+.cam .oval { position: absolute; left: 50%; top: 50%; width: 46%; height: 72%; transform: translate(-50%, -50%); border: 3px dashed rgba(255,0,184, .7); border-radius: 50%; }
 .result { border-radius: 20px; padding: 26px; text-align: center; animation: pop .25s; }
 .result.ok { background: linear-gradient(160deg, rgba(34,197,94,.25), rgba(34,197,94,.05)); border: 2px solid var(--ok); }
 .result.bad { background: linear-gradient(160deg, rgba(239,68,68,.25), rgba(239,68,68,.05)); border: 2px solid var(--bad); }
 .nfc-pulse { width: 120px; height: 120px; border-radius: 50%; display: grid; place-items: center; margin: 0 auto; background: var(--card2); border: 2px solid var(--line); }
 .nfc-pulse.on { border-color: var(--y); animation: pulse 1.2s infinite; color: var(--y); }
-@keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(183,255,0,.5) } 100% { box-shadow: 0 0 0 30px rgba(183,255,0,0) } }
+@keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255,0,184,.5) } 100% { box-shadow: 0 0 0 30px rgba(255,0,184,0) } }
 
 .tabs { display: flex; gap: 6px; background: var(--card); border: 1px solid var(--line); padding: 5px; border-radius: 14px; overflow-x: auto; }
 .tabs button { background: none; border: 0; padding: 9px 14px; border-radius: 10px; color: var(--mut); font-weight: 700; cursor: pointer; white-space: nowrap; display: inline-flex; gap: 6px; align-items: center; }
@@ -233,7 +233,7 @@ table.t { width: 100%; border-collapse: collapse; font-size: .88rem; }
 .bell { position: relative; }
 .bell-dot { position: absolute; top: -6px; right: -6px; background: var(--y); color: #000; font-size: .62rem; font-weight: 800; min-width: 18px; height: 18px; border-radius: 99px; display: grid; place-items: center; padding: 0 4px; }
 .push-banner { position: fixed; top: 14px; left: 50%; transform: translateX(-50%); width: min(440px, calc(100% - 24px)); z-index: 300; background: rgba(20,20,20,.97);
-  backdrop-filter: blur(12px); border: 1px solid var(--y); border-radius: 18px; overflow: hidden; cursor: pointer; box-shadow: 0 20px 60px rgba(0,0,0,.6), 0 0 0 1px rgba(183,255,0,.2); animation: drop .35s cubic-bezier(.2,1.4,.4,1); }
+  backdrop-filter: blur(12px); border: 1px solid var(--y); border-radius: 18px; overflow: hidden; cursor: pointer; box-shadow: 0 20px 60px rgba(0,0,0,.6), 0 0 0 1px rgba(255,0,184,.2); animation: drop .35s cubic-bezier(.2,1.4,.4,1); }
 .push-banner img { width: 100%; max-height: 150px; object-fit: cover; display: block; }
 @keyframes drop { from { opacity: 0; transform: translate(-50%, -30px) } }
 .drawer { background: var(--card); border-left: 1px solid var(--line); width: min(420px, 100vw); height: 100vh; overflow-y: auto; padding: 20px; animation: slide .2s; }
@@ -608,4 +608,10 @@ img, video, canvas { max-width: 100%; }
 /* ---------- Marca Margybel Pacheco Mitchell ---------- */
 .brand-img { width: 46px; height: 46px; border-radius: 12px; object-fit: cover; background: #000; }
 .brand.mini .brand-img { width: 36px; height: 36px; border-radius: 10px; }
-.login-banner { width: 100%; max-width: 560px; border-radius: 18px; border: 1px solid var(--line); box-shadow: 0 0 40px rgba(183,255,0,.18); position: relative; z-index: 1; }
+.login-banner { width: 100%; max-width: 560px; border-radius: 18px; border: 1px solid var(--line); box-shadow: 0 0 40px rgba(255,0,184,.18); position: relative; z-index: 1; }
+
+/* Portada de inicio */
+.portada { position: fixed; inset: 0; z-index: 9999; background: #000; display: grid; place-items: center; transition: opacity .6s ease; }
+.portada.off { opacity: 0; pointer-events: none; }
+.portada img { width: 100%; height: 100%; object-fit: contain; animation: portada-in .8s ease both; }
+@keyframes portada-in { from { opacity: 0; transform: scale(.96) } to { opacity: 1; transform: scale(1) } }

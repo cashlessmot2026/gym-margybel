@@ -23,7 +23,7 @@
       "autoStart": true
     },
     "LocalNotifications": {
-      "iconColor": "#B7FF00",
+      "iconColor": "#FF00B8",
       "sound": "alarma.wav"
     },
     "SystemBars": {

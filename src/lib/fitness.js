@@ -17,7 +17,7 @@ export function bmiCategory(v) {
   if (v == null) return { label: '—', color: '#888' }
   if (v < 18.5) return { label: 'Bajo peso', color: '#60a5fa' }
   if (v < 25) return { label: 'Normal', color: '#22c55e' }
-  if (v < 30) return { label: 'Sobrepeso', color: '#B7FF00' }
+  if (v < 30) return { label: 'Sobrepeso', color: '#FF00B8' }
   if (v < 35) return { label: 'Obesidad I', color: '#fb923c' }
   if (v < 40) return { label: 'Obesidad II', color: '#f97316' }
   return { label: 'Obesidad III', color: '#ef4444' }

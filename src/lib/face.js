@@ -111,7 +111,7 @@ export function bestMatch(descriptor, members, threshold = 0.47, margin = 0.05) 
 }
 
 /** Dibuja el recuadro del rostro sobre un canvas superpuesto al video (espejado igual que el video). */
-export function drawBox(canvas, video, det, color = '#B7FF00') {
+export function drawBox(canvas, video, det, color = '#FF00B8') {
   if (!canvas || !video) return
   const w = video.videoWidth, h = video.videoHeight
   if (canvas.width !== w) canvas.width = w

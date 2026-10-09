@@ -7,7 +7,7 @@ import { calcAge } from './constants'
 export const ZONES = [
   { id: 'z1', label: 'Z1 Suave', from: 0.5, color: '#60a5fa' },
   { id: 'z2', label: 'Z2 Quema grasa', from: 0.6, color: '#22c55e' },
-  { id: 'z3', label: 'Z3 Aeróbica', from: 0.7, color: '#B7FF00' },
+  { id: 'z3', label: 'Z3 Aeróbica', from: 0.7, color: '#FF00B8' },
   { id: 'z4', label: 'Z4 Umbral', from: 0.8, color: '#f97316' },
   { id: 'z5', label: 'Z5 Máximo', from: 0.9, color: '#ef4444' }
 ]

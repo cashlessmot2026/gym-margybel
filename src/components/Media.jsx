@@ -103,7 +103,7 @@ export function FaceEnroll({ onDone, samples = 5 }) {
         const q = faceQuality(det, v)
         const s = st.current
         s.lastDet = det
-        drawBox(canvasRef.current, v, det, q.ok ? '#22c55e' : '#B7FF00')
+        drawBox(canvasRef.current, v, det, q.ok ? '#22c55e' : '#FF00B8')
         setLevel(q.level)
         if (s.collected.length < samples) {
           if (q.ok && Date.now() - s.last > 300) {
@@ -208,13 +208,13 @@ export function QRImage({ value, size = 220, name, download = true }) {
     const c = document.createElement('canvas'); c.width = 600; c.height = 820
     const g = c.getContext('2d')
     g.fillStyle = '#0a0a0a'; g.fillRect(0, 0, 600, 820)
-    g.fillStyle = '#B7FF00'; g.fillRect(0, 0, 600, 110)
+    g.fillStyle = '#FF00B8'; g.fillRect(0, 0, 600, 110)
     g.fillStyle = '#000'; g.font = 'bold 54px Bebas Neue, Arial'; g.textAlign = 'center'; g.fillText('MARGYBEL PACHECO', 300, 75)
     const img = new Image()
     img.onload = () => {
       g.fillStyle = '#fff'; g.fillRect(70, 150, 460, 460); g.drawImage(img, 80, 160, 440, 440)
       g.fillStyle = '#fff'; g.font = 'bold 34px Inter, Arial'; g.fillText(name || '', 300, 680)
-      g.fillStyle = '#B7FF00'; g.font = 'bold 30px monospace'; g.fillText(value, 300, 735)
+      g.fillStyle = '#FF00B8'; g.font = 'bold 30px monospace'; g.fillText(value, 300, 735)
       const a = document.createElement('a'); a.href = c.toDataURL('image/png'); a.download = `QR_${(name || value).replace(/\s+/g, '_')}.png`; a.click()
     }
     img.src = url
@@ -223,7 +223,7 @@ export function QRImage({ value, size = 220, name, download = true }) {
     <div className="qr-card">
       <img src={url} width={size} height={size} alt={value} style={{ display: 'block', margin: '0 auto' }} />
       <div style={{ fontFamily: 'monospace', fontWeight: 800, marginTop: 6 }}>{value}</div>
-      {download && <button type="button" className="btn sm mt" style={{ background: '#000', color: '#B7FF00' }} onClick={save}><Download size={14} /> Descargar tarjeta</button>}
+      {download && <button type="button" className="btn sm mt" style={{ background: '#000', color: '#FF00B8' }} onClick={save}><Download size={14} /> Descargar tarjeta</button>}
     </div>
   )
 }

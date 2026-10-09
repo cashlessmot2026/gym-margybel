@@ -84,7 +84,7 @@ async function nativeChannels(LocalNotifications) {
   await LocalNotifications.createChannel({ id: 'promos', name: 'Promociones y avisos', importance: 4, visibility: 1, vibration: true }).catch(() => {})
   await LocalNotifications.createChannel({
     id: 'clases', name: 'Alertas de clase', description: 'Aviso con alarma 10 minutos antes de tu clase',
-    importance: 5, visibility: 1, sound: 'alarma.wav', vibration: true, lights: true, lightColor: '#B7FF00'
+    importance: 5, visibility: 1, sound: 'alarma.wav', vibration: true, lights: true, lightColor: '#FF00B8'
   }).catch(() => {})
 }
 

@@ -132,7 +132,7 @@ export default function HealthAnalytics({ member }) {
 
       {hasSteps && (
         <div className="card"><h3><Footprints size={16} /> Pasos por día</h3>
-          <ResponsiveContainer width="100%" height={220}><BarChart data={series}><CartesianGrid stroke="#222" vertical={false} /><XAxis dataKey="label" stroke="#666" fontSize={10} interval={tick} /><YAxis stroke="#666" fontSize={11} width={40} /><Tooltip {...tip} formatter={(v) => [v.toLocaleString('es'), 'Pasos']} /><Bar dataKey="steps" fill="#B7FF00" radius={[4, 4, 0, 0]} /></BarChart></ResponsiveContainer></div>
+          <ResponsiveContainer width="100%" height={220}><BarChart data={series}><CartesianGrid stroke="#222" vertical={false} /><XAxis dataKey="label" stroke="#666" fontSize={10} interval={tick} /><YAxis stroke="#666" fontSize={11} width={40} /><Tooltip {...tip} formatter={(v) => [v.toLocaleString('es'), 'Pasos']} /><Bar dataKey="steps" fill="#FF00B8" radius={[4, 4, 0, 0]} /></BarChart></ResponsiveContainer></div>
       )}
 
       <div className="grid g2">
@@ -146,7 +146,7 @@ export default function HealthAnalytics({ member }) {
       <div className="grid g2">
         {weekly.length > 0 && <div className="card"><h3><Route size={16} /> Distancia y tiempo por semana</h3>
           <ResponsiveContainer width="100%" height={200}><BarChart data={weekly}><CartesianGrid stroke="#222" vertical={false} /><XAxis dataKey="week" stroke="#666" fontSize={10} /><YAxis yAxisId="a" stroke="#666" fontSize={11} width={34} /><YAxis yAxisId="b" orientation="right" stroke="#666" fontSize={11} width={34} /><Tooltip {...tip} /><Legend wrapperStyle={{ fontSize: 11 }} />
-            <Bar yAxisId="a" dataKey="km" name="km" fill="#B7FF00" radius={[4, 4, 0, 0]} /><Bar yAxisId="b" dataKey="min" name="min" fill="#3b82f6" radius={[4, 4, 0, 0]} /></BarChart></ResponsiveContainer></div>}
+            <Bar yAxisId="a" dataKey="km" name="km" fill="#FF00B8" radius={[4, 4, 0, 0]} /><Bar yAxisId="b" dataKey="min" name="min" fill="#3b82f6" radius={[4, 4, 0, 0]} /></BarChart></ResponsiveContainer></div>}
         {sportData.length > 0 && <div className="card"><h3><Activity size={16} /> Tiempo por deporte (min)</h3>
           <ResponsiveContainer width="100%" height={200}><PieChart><Pie data={sportData} dataKey="value" nameKey="name" innerRadius={45} outerRadius={80}>{sportData.map((_, i) => <Cell key={i} fill={CHART[i % CHART.length]} />)}</Pie><Tooltip {...tip} /><Legend wrapperStyle={{ fontSize: 11 }} /></PieChart></ResponsiveContainer></div>}
       </div>

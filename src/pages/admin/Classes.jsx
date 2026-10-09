@@ -6,7 +6,7 @@ import { hm, ymd, startAt, sessionState, STATE_LABEL } from '../../lib/classes'
 import { PageTitle, Modal, Input, Select, Field, Empty, Loading, Avatar, Spinner, Tabs, useToast } from '../../components/ui'
 
 const ORDER = [1, 2, 3, 4, 5, 6, 0] // semana empezando el lunes
-const COLORS = ['#B7FF00', '#ef4444', '#3b82f6', '#22c55e', '#a855f7', '#f97316', '#ec4899', '#14b8a6']
+const COLORS = ['#FF00B8', '#ef4444', '#3b82f6', '#22c55e', '#a855f7', '#f97316', '#eab308', '#14b8a6']
 const PRESETS = [['Lun-Vie', [1, 2, 3, 4, 5]], ['Lun-Sáb', [1, 2, 3, 4, 5, 6]], ['Toda la semana', [0, 1, 2, 3, 4, 5, 6]], ['L-M-V', [1, 3, 5]], ['M-J', [2, 4]]]
 
 const loadAll = async () => {

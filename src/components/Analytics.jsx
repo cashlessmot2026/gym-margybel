@@ -5,8 +5,8 @@ import { memberHistory } from '../lib/data'
 import { fmtTime, fmtDate } from '../lib/constants'
 import { Stat, Loading, Empty } from './ui'
 
-export const CHART = ['#B7FF00', '#f5f5f5', '#a3a3a3', '#d4ff4d', '#737373', '#e4ff99', '#525252', '#ca8a04', '#d4d4d4', '#854d0e']
-export const tip = { contentStyle: { background: '#111', border: '1px solid #333', borderRadius: 10 }, labelStyle: { color: '#B7FF00' } }
+export const CHART = ['#FF00B8', '#f5f5f5', '#a3a3a3', '#FF4DCF', '#737373', '#FF99E3', '#525252', '#ca8a04', '#d4d4d4', '#854d0e']
+export const tip = { contentStyle: { background: '#111', border: '1px solid #333', borderRadius: 10 }, labelStyle: { color: '#FF00B8' } }
 const axis = { stroke: '#666', fontSize: 11 }
 
 export function MemberAnalytics({ memberId, days = 60 }) {
@@ -55,7 +55,7 @@ export function MemberAnalytics({ memberId, days = 60 }) {
           {k.weeks.length ? (
             <ResponsiveContainer width="100%" height={230}>
               <BarChart data={k.weeks}><CartesianGrid stroke="#222" vertical={false} /><XAxis dataKey="semana" {...axis} /><YAxis {...axis} /><Tooltip {...tip} />
-                <Bar dataKey="minutos" fill="#B7FF00" radius={[6, 6, 0, 0]} /><Bar dataKey="sesiones" fill="#555" radius={[6, 6, 0, 0]} /></BarChart>
+                <Bar dataKey="minutos" fill="#FF00B8" radius={[6, 6, 0, 0]} /><Bar dataKey="sesiones" fill="#555" radius={[6, 6, 0, 0]} /></BarChart>
             </ResponsiveContainer>
           ) : <Empty>Sin sesiones registradas</Empty>}
         </div>
@@ -73,7 +73,7 @@ export function MemberAnalytics({ memberId, days = 60 }) {
           {k.body.length ? (
             <ResponsiveContainer width="100%" height={230}>
               <LineChart data={k.body}><CartesianGrid stroke="#222" /><XAxis dataKey="fecha" {...axis} /><YAxis {...axis} /><Tooltip {...tip} /><Legend wrapperStyle={{ fontSize: 11 }} />
-                <Line dataKey="peso" stroke="#B7FF00" strokeWidth={3} dot /><Line dataKey="grasa" stroke="#f5f5f5" strokeWidth={2} /><Line dataKey="imc" stroke="#777" strokeWidth={2} /></LineChart>
+                <Line dataKey="peso" stroke="#FF00B8" strokeWidth={3} dot /><Line dataKey="grasa" stroke="#f5f5f5" strokeWidth={2} /><Line dataKey="imc" stroke="#777" strokeWidth={2} /></LineChart>
             </ResponsiveContainer>
           ) : <Empty>Sin medidas registradas</Empty>}
         </div>
@@ -82,7 +82,7 @@ export function MemberAnalytics({ memberId, days = 60 }) {
           {k.topEx ? (
             <ResponsiveContainer width="100%" height={230}>
               <LineChart data={k.topEx[1]}><CartesianGrid stroke="#222" /><XAxis dataKey="fecha" {...axis} /><YAxis {...axis} /><Tooltip {...tip} />
-                <Line dataKey="kg" stroke="#B7FF00" strokeWidth={3} /></LineChart>
+                <Line dataKey="kg" stroke="#FF00B8" strokeWidth={3} /></LineChart>
             </ResponsiveContainer>
           ) : <Empty>Registra pesos en tus ejercicios para ver el progreso</Empty>}
         </div>

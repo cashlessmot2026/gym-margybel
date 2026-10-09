@@ -194,7 +194,7 @@ function DaySummary({ s, onClose }) {
         <div className="card"><h3>Tiempo por ejercicio (s)</h3>
           <ResponsiveContainer width="100%" height={240}>
             <BarChart data={perEx}><CartesianGrid stroke="#222" vertical={false} /><XAxis dataKey="name" stroke="#666" fontSize={10} /><YAxis stroke="#666" fontSize={11} /><Tooltip {...tip} /><Legend wrapperStyle={{ fontSize: 11 }} />
-              <Bar dataKey="trabajo" stackId="a" fill="#B7FF00" /><Bar dataKey="descanso" stackId="a" fill="#3b82f6" radius={[6, 6, 0, 0]} /></BarChart>
+              <Bar dataKey="trabajo" stackId="a" fill="#FF00B8" /><Bar dataKey="descanso" stackId="a" fill="#3b82f6" radius={[6, 6, 0, 0]} /></BarChart>
           </ResponsiveContainer></div>
         <div className="card"><h3>Series por grupo muscular</h3>
           <ResponsiveContainer width="100%" height={240}>

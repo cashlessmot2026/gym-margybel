@@ -167,7 +167,7 @@ export function Markdown({ text }) {
 export function Brand({ sub }) {
   return (
     <div className="brand">
-      <img className="brand-img" src={`${import.meta.env.BASE_URL}logo.png`} alt="Margybel Pacheco Mitchell" />
+      <img className="brand-img" src={`${import.meta.env.BASE_URL}mark.png`} alt="Margybel Pacheco Mitchell" />
       <div>
         <div className="brand-name">MARGYBEL<span>PACHECO</span></div>
         {sub && <div className="tiny muted" style={{ letterSpacing: '.15em', fontWeight: 700 }}>{sub}</div>}
@@ -205,7 +205,7 @@ export function Shell({ sub, nav, value, onChange, user, onLogout, children }) {
       </aside>
 
       <header className="mobile-bar">
-        <div className="brand mini"><img className="brand-img" src={`${import.meta.env.BASE_URL}logo.png`} alt="" /><div className="brand-name">MARGYBEL<span>PACHECO</span></div></div>
+        <div className="brand mini"><img className="brand-img" src={`${import.meta.env.BASE_URL}mark.png`} alt="" /><div className="brand-name">MARGYBEL<span>PACHECO</span></div></div>
         {user && <button className="mobile-user" onClick={() => setSheet(true)} aria-label="Mi cuenta"><Avatar src={user.photo} name={user.full_name} /></button>}
       </header>
 

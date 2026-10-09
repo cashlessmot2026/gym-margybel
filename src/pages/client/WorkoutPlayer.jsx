@@ -162,7 +162,7 @@ export default function WorkoutPlayer({ item, member, onFinish, onClose }) {
         <div className="timer-ring">
           <svg viewBox="0 0 320 320">
             <circle cx="160" cy="160" r={R} fill="none" stroke="#1f1f1f" strokeWidth="16" />
-            <circle cx="160" cy="160" r={R} fill="none" stroke={phase === 'rest' ? '#60a5fa' : '#B7FF00'} strokeWidth="16" strokeLinecap="round"
+            <circle cx="160" cy="160" r={R} fill="none" stroke={phase === 'rest' ? '#60a5fa' : '#FF00B8'} strokeWidth="16" strokeLinecap="round"
               strokeDasharray={C} strokeDashoffset={C * pct} style={{ transition: 'stroke-dashoffset .2s linear' }} />
           </svg>
           <div className="timer-center">

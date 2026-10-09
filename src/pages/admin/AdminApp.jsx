@@ -124,10 +124,10 @@ function Dashboard({ data, reload, goTo }) {
       </div>
       <div className="grid g2 mt">
         <div className="card"><h3>Ingresos por mes</h3>
-          <ResponsiveContainer width="100%" height={230}><BarChart data={incomeChart}><CartesianGrid stroke="#222" vertical={false} /><XAxis dataKey="mes" stroke="#666" fontSize={11} /><YAxis stroke="#666" fontSize={11} /><Tooltip {...tip} /><Bar dataKey="total" fill="#B7FF00" radius={[6, 6, 0, 0]} /></BarChart></ResponsiveContainer>
+          <ResponsiveContainer width="100%" height={230}><BarChart data={incomeChart}><CartesianGrid stroke="#222" vertical={false} /><XAxis dataKey="mes" stroke="#666" fontSize={11} /><YAxis stroke="#666" fontSize={11} /><Tooltip {...tip} /><Bar dataKey="total" fill="#FF00B8" radius={[6, 6, 0, 0]} /></BarChart></ResponsiveContainer>
         </div>
         <div className="card"><h3>Asistencia últimos 14 días</h3>
-          <ResponsiveContainer width="100%" height={230}><AreaChart data={attChart}><CartesianGrid stroke="#222" vertical={false} /><XAxis dataKey="dia" stroke="#666" fontSize={11} /><YAxis stroke="#666" fontSize={11} allowDecimals={false} /><Tooltip {...tip} /><Area dataKey="ingresos" stroke="#B7FF00" fill="rgba(183,255,0,.25)" strokeWidth={3} /></AreaChart></ResponsiveContainer>
+          <ResponsiveContainer width="100%" height={230}><AreaChart data={attChart}><CartesianGrid stroke="#222" vertical={false} /><XAxis dataKey="dia" stroke="#666" fontSize={11} /><YAxis stroke="#666" fontSize={11} allowDecimals={false} /><Tooltip {...tip} /><Area dataKey="ingresos" stroke="#FF00B8" fill="rgba(255,0,184,.25)" strokeWidth={3} /></AreaChart></ResponsiveContainer>
         </div>
       </div>
       <div className="card mt">
