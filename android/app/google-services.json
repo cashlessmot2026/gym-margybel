@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1084442017625",
+    "project_id": "margybel-fitness",
+    "storage_bucket": "margybel-fitness.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1084442017625:android:a60813e11699a378ca5648",
+        "android_client_info": {
+          "package_name": "com.margybel.fitness"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCg21cVqrqRxqNzPmBKjVehYUhsn-f69wU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
