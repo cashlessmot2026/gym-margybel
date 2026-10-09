@@ -1,0 +1,240 @@
+// Notificaciones — sin Firebase:
+// - Web / PWA: Push API + Service Worker con claves VAPID (llegan con la app cerrada).
+// - App Android: notificaciones LOCALES (@capacitor/local-notifications):
+//     · Alertas de clase programadas en el teléfono 10 min antes, con canal de alarma.
+//     · Promociones: tarea en segundo plano (@capacitor/background-runner) que consulta
+//       Supabase cada ~15 min y las muestra aunque la app esté cerrada.
+// - App abierta: Supabase Realtime → banner interno (y alarma en alertas de clase).
+// owner = { member_id } (clientes) o { staff_id } (coaches/personal)
+import { supabase, q, SUPABASE_URL, SUPABASE_ANON_KEY } from './supabase'
+import { scheduleClassAlerts } from './classes'
+
+export const VAPID_PUBLIC_KEY = import.meta.env.VITE_VAPID_PUBLIC_KEY ||
+  'BONowCV3XzVBwpV89Hz_VG7WuXWSXoigZpZ9zRkUvApOleYJa-u8n64le8PiH1hwwt0cKiz6XUOZz67sz3jYGx8'
+
+export const isNative = () => !!window.Capacitor?.isNativePlatform?.()
+const RUNNER = 'com.margybel.fitness.check'
+const toOwner = (x) => (typeof x === 'string' ? { member_id: x } : x)
+
+export function pushSupport() {
+  if (isNative()) return 'native'
+  if ('serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window) return 'web'
+  return null
+}
+
+export function pushPermission() {
+  if (isNative()) return localStorage.getItem('mp_push_native') || 'default'
+  return 'Notification' in window ? Notification.permission : 'denied'
+}
+
+const toUint8 = (b64) => {
+  const pad = '='.repeat((4 - (b64.length % 4)) % 4)
+  const raw = atob((b64 + pad).replace(/-/g, '+').replace(/_/g, '/'))
+  return Uint8Array.from(raw, (c) => c.charCodeAt(0))
+}
+
+const deviceId = () => {
+  let id = localStorage.getItem('iy_device_id')
+  if (!id) { id = crypto.randomUUID(); localStorage.setItem('iy_device_id', id) }
+  return id
+}
+
+async function saveSubscription(row) {
+  return q(supabase.from('push_subscriptions').upsert({ ...row, last_seen: new Date().toISOString(), user_agent: navigator.userAgent.slice(0, 250) }, { onConflict: 'endpoint' }))
+}
+
+// ---------- Firebase Cloud Messaging (APK Android) ----------
+const fcmWaiters = []
+let fcmListening = false
+
+/** Registra el teléfono en FCM y devuelve su token. Rechaza si FCM no está disponible. */
+async function registerFcm() {
+  const { PushNotifications } = await import('@capacitor/push-notifications')
+  if (!fcmListening) {
+    fcmListening = true
+    // El token puede cambiar con el tiempo: se vuelve a guardar solo
+    await PushNotifications.addListener('registration', (t) => {
+      localStorage.setItem('iy_fcm_token', t.value)
+      fcmWaiters.splice(0).forEach((w) => w.ok(t.value))
+      try {
+        const o = JSON.parse(localStorage.getItem('iy_push_owner') || '{}')
+        if (o.member_id || o.staff_id) saveSubscription({ ...o, platform: 'android', endpoint: t.value }).catch(() => {})
+      } catch { /* sin propietario */ }
+    })
+    await PushNotifications.addListener('registrationError', (e) => fcmWaiters.splice(0).forEach((w) => w.err(new Error(e?.error || 'Error al registrar en FCM'))))
+  }
+  const perm = await PushNotifications.requestPermissions()
+  if (perm.receive !== 'granted') throw new Error('Permiso de notificaciones denegado')
+  return new Promise((ok, err) => {
+    const timer = setTimeout(() => err(new Error('FCM no respondió (¿falta google-services.json o Google Play Services?)')), 15000)
+    fcmWaiters.push({ ok: (v) => { clearTimeout(timer); ok(v) }, err: (e) => { clearTimeout(timer); err(e) } })
+    PushNotifications.register().catch((e) => { clearTimeout(timer); err(e) })
+  })
+}
+
+async function swRegistration() {
+  return Promise.race([
+    navigator.serviceWorker.ready,
+    new Promise((_, rej) => setTimeout(() => rej(new Error('Service Worker no activo. Las notificaciones push funcionan en la versión instalada/compilada (npm run build).')), 4000))
+  ])
+}
+
+/** Canales de Android: promociones (normal) y clases (alarma, máxima prioridad). */
+async function nativeChannels(LocalNotifications) {
+  await LocalNotifications.createChannel({ id: 'promos', name: 'Promociones y avisos', importance: 4, visibility: 1, vibration: true }).catch(() => {})
+  await LocalNotifications.createChannel({
+    id: 'clases', name: 'Alertas de clase', description: 'Aviso con alarma 10 minutos antes de tu clase',
+    importance: 5, visibility: 1, sound: 'alarma.wav', vibration: true, lights: true, lightColor: '#B7FF00'
+  }).catch(() => {})
+}
+
+/** Configura la tarea en segundo plano con el usuario actual (consulta Supabase cada ~15 min). */
+async function configureBackground(owner) {
+  try {
+    const { BackgroundRunner } = await import('@capacitor/background-runner')
+    await BackgroundRunner.dispatchEvent({ label: RUNNER, event: 'configure', details: { ...owner, url: SUPABASE_URL, key: SUPABASE_ANON_KEY } })
+  } catch { /* sin runner */ }
+}
+
+/** Pide permiso y registra este dispositivo. */
+export async function enablePush(ownerOrMemberId) {
+  const owner = toOwner(ownerOrMemberId)
+  const kind = pushSupport()
+  if (!kind) throw new Error('Este navegador no soporta notificaciones push. En iPhone, instala la app en la pantalla de inicio (iOS 16.4+).')
+
+  if (kind === 'native') {
+    const { LocalNotifications } = await import('@capacitor/local-notifications')
+    const perm = await LocalNotifications.requestPermissions()
+    if (perm.display !== 'granted') { localStorage.setItem('mp_push_native', 'denied'); throw new Error('Permiso de notificaciones denegado. Actívalo en Ajustes > Apps > Margybel Pacheco Mitchell > Notificaciones.') }
+    await nativeChannels(LocalNotifications)
+    // Android 12+: las alarmas exactas garantizan que la alerta suene justo 10 min antes
+    try {
+      const ex = await LocalNotifications.checkExactNotificationSetting?.()
+      if (ex && ex.exact_notification_setting !== 'granted' && !localStorage.getItem('iy_exact_asked')) {
+        localStorage.setItem('iy_exact_asked', '1')
+        await LocalNotifications.changeExactNotificationSetting()
+      }
+    } catch { /* versión sin alarmas exactas */ }
+    localStorage.setItem('mp_push_native', 'granted')
+    localStorage.setItem('iy_push_owner', JSON.stringify(owner))
+    // Push real por Firebase Cloud Messaging: llega aunque la app esté cerrada.
+    let token = null
+    try { token = await registerFcm() } catch (e) { console.warn('[fcm]', e?.message || e) }
+    if (token) {
+      await saveSubscription({ ...owner, platform: 'android', endpoint: token })
+      // Ya no hace falta la consulta periódica (evita avisos duplicados)
+      await supabase.from('push_subscriptions').delete().eq('endpoint', `local:${deviceId()}`)
+      await configureBackground({})
+    } else {
+      // Sin FCM (p. ej. sin Google Play Services): se conserva la consulta cada ~15 min como respaldo
+      await saveSubscription({ ...owner, platform: 'android', endpoint: `local:${deviceId()}` })
+      await configureBackground(owner)
+    }
+    await scheduleClassAlerts(owner).catch(() => {})
+    return true
+  }
+
+  const perm = await Notification.requestPermission()
+  if (perm !== 'granted') throw new Error('Permiso de notificaciones denegado. Actívalo en la configuración del navegador.')
+  const reg = await swRegistration()
+  let sub = await reg.pushManager.getSubscription()
+  // Si la suscripción se creó con otra clave VAPID, el servidor la rechaza (403): se renueva
+  const wanted = toUint8(VAPID_PUBLIC_KEY)
+  const have = sub?.options?.applicationServerKey && new Uint8Array(sub.options.applicationServerKey)
+  if (sub && have && (have.length !== wanted.length || have.some((b, i) => b !== wanted[i]))) {
+    await supabase.from('push_subscriptions').delete().eq('endpoint', sub.endpoint)
+    await sub.unsubscribe()
+    sub = null
+  }
+  if (!sub) sub = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: toUint8(VAPID_PUBLIC_KEY) })
+  const j = sub.toJSON()
+  await saveSubscription({ ...owner, platform: 'web', endpoint: j.endpoint, p256dh: j.keys.p256dh, auth: j.keys.auth })
+  return true
+}
+
+export async function disablePush() {
+  if (isNative()) {
+    const { LocalNotifications } = await import('@capacitor/local-notifications')
+    const pending = await LocalNotifications.getPending().catch(() => ({ notifications: [] }))
+    if (pending.notifications.length) await LocalNotifications.cancel({ notifications: pending.notifications.map((n) => ({ id: n.id })) }).catch(() => {})
+    await supabase.from('push_subscriptions').delete().eq('endpoint', `local:${deviceId()}`)
+    const fcm = localStorage.getItem('iy_fcm_token')
+    if (fcm) {
+      await supabase.from('push_subscriptions').delete().eq('endpoint', fcm)
+      localStorage.removeItem('iy_fcm_token')
+      import('@capacitor/push-notifications').then(({ PushNotifications }) => PushNotifications.unregister()).catch(() => {})
+    }
+    await configureBackground({})
+    localStorage.setItem('mp_push_native', 'default')
+    return
+  }
+  const reg = await swRegistration().catch(() => null)
+  const sub = await reg?.pushManager.getSubscription()
+  if (sub) {
+    await supabase.from('push_subscriptions').delete().eq('endpoint', sub.endpoint)
+    await sub.unsubscribe()
+  }
+}
+
+/** Si ya hay permiso, vuelve a guardar la suscripción y reprograma alertas de clase. */
+export async function syncPush(ownerOrMemberId) {
+  try {
+    if (pushPermission() === 'granted') await enablePush(ownerOrMemberId)
+  } catch { /* silencioso */ }
+}
+
+/** Muestra una notificación del sistema inmediata en la app nativa (app en segundo plano). */
+export async function showNativeNow(n) {
+  if (!isNative() || pushPermission() !== 'granted') return
+  const { LocalNotifications } = await import('@capacitor/local-notifications')
+  await LocalNotifications.schedule({
+    notifications: [{
+      id: Math.abs(hash(n.id || n.title)) % 2000000000, title: n.title, body: n.body, largeBody: n.body,
+      channelId: n.category === 'clase' ? 'clases' : 'promos', extra: { url: n.url, id: n.id }
+    }]
+  }).catch(() => {})
+}
+
+export const hash = (s) => { let h = 0; for (const c of String(s)) h = (h * 31 + c.charCodeAt(0)) | 0; return h }
+
+/** Escucha notificaciones con la app abierta (SW o nativo) y aperturas desde la notificación. */
+export function listenPushMessages({ onMessage, onOpen }) {
+  const offs = []
+  if ('serviceWorker' in navigator) {
+    const h = (e) => {
+      if (e.data?.type === 'push') onMessage?.(e.data.payload)
+      if (e.data?.type === 'open') onOpen?.(e.data)
+    }
+    navigator.serviceWorker.addEventListener('message', h)
+    offs.push(() => navigator.serviceWorker.removeEventListener('message', h))
+  }
+  if (isNative()) {
+    import('@capacitor/local-notifications').then(({ LocalNotifications }) => {
+      const h = LocalNotifications.addListener('localNotificationActionPerformed', (a) => onOpen?.({ url: a.notification.extra?.url, id: a.notification.extra?.id }))
+      offs.push(() => Promise.resolve(h).then((x) => x?.remove?.()))
+    })
+    // Push de Firebase: con la app abierta muestra el aviso interno; al tocar la notificación abre su destino
+    import('@capacitor/push-notifications').then(({ PushNotifications }) => {
+      const a = PushNotifications.addListener('pushNotificationReceived', (n) => onMessage?.({ id: n.data?.id, title: n.title, body: n.body, url: n.data?.url, category: n.data?.category }))
+      const b = PushNotifications.addListener('pushNotificationActionPerformed', (e) => onOpen?.({ url: e.notification?.data?.url, id: e.notification?.data?.id }))
+      offs.push(() => { Promise.resolve(a).then((x) => x?.remove?.()); Promise.resolve(b).then((x) => x?.remove?.()) })
+    }).catch(() => {})
+  }
+  return () => offs.forEach((f) => f())
+}
+
+/** Pide a la Edge Function que envíe la notificación a todos los dispositivos de la audiencia. */
+export async function dispatchPush(notificationId) {
+  const res = await fetch(`${SUPABASE_URL}/functions/v1/send-push`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` },
+    body: JSON.stringify({ id: notificationId })
+  })
+  const body = await res.json().catch(() => ({}))
+  if (!res.ok) throw new Error(body.error || `La función send-push respondió ${res.status}`)
+  return body
+}
+
+/** ¿Esta notificación es para este cliente / miembro del personal? */
+export const isForMember = (n, memberId) => !n.recipients || n.recipients.includes(memberId)
+export const isForStaff = (n, staffId) => (n.audience?.staff_ids || []).includes(staffId)

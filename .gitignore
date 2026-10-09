@@ -1,0 +1,12 @@
+node_modules
+dist
+dev-dist
+.env.local
+*.log
+.env.vapid.json
+Margybel_Accesos.pdf
+Margybel-Fitness.apk
+
+.secrets/
+.secrets/
+*-firebase-adminsdk-*.json
