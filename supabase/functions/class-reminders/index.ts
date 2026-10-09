@@ -72,7 +72,7 @@ Deno.serve(async () => {
         const { data: n } = await db.from("notifications").insert({
           title: `⏰ Clase ${cls.name} en ${LEAD_MIN} minutos`,
           body: `Hoy a las ${hour}${where} · ${ids.length} alumno${ids.length === 1 ? "" : "s"} inscrito${ids.length === 1 ? "" : "s"}.`,
-          category: "clase", url: "/coach",
+          category: "clase", url: "/admin",
           audience: { type: "members", ids: [], staff_ids: [coach] }, recipients: [],
         }).select().single();
         if (n) await sendPush(n.id);

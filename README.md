@@ -7,7 +7,7 @@ Clon de la app del gimnasio, con la marca de Margybel Pacheco Mitchell (verde `#
 - **Administración** (`/admin`): panel del administrador **con todas las funciones del coach** (rutinas, grupos, ejercicios, analítica, clases). Ya no existe la interfaz de coach separada.
 - `/check`: control de acceso (recepción / kiosko).
 
-## Base de datos (Supabase `jehwevhxrnjxfepwaani`)
+## Base de datos (Supabase `jqdbwysucudatciodcfw`)
 Ejecuta en el SQL Editor, en este orden: `supabase/schema.sql`, `02_push.sql`, `03_pagos_cop.sql`, `04_clases.sql`, `05_social.sql`, `06_tienda.sql`.
 (`07_salud.sql` no hace falta.) Usuario inicial: `admin` / `admin123` — **cámbiala** al entrar.
 

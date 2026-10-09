@@ -97,7 +97,7 @@ select cron.schedule(
   '* * * * *',
   $cron$
     select net.http_post(
-      url := 'https://jehwevhxrnjxfepwaani.supabase.co/functions/v1/class-reminders',
+      url := 'https://jqdbwysucudatciodcfw.supabase.co/functions/v1/class-reminders',
       headers := '{"Content-Type": "application/json"}'::jsonb,
       body := '{}'::jsonb
     );
